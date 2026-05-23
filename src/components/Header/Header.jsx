@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "./Header.scss";
-import Logo from "../../assets/images/Zomato-Logo.png";
+import Logo from "../../assets/images/mamays-logo-1.jpg";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import blackLogo from "../../assets/images/blackLogo.webp";
+import blackLogo from "../../assets/images/mamays-logo-2.jpg";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -11,12 +11,12 @@ const Header = () => {
   return (
     <div className="header">
       <nav>
-        <span>Get the App</span>
+        <span>Descarga la App</span>
         <div className="right">
-          <span>Investor Relations</span>
-          <span>Add restaurant</span>
-          <span>Log in</span>
-          <span>Sign up</span>
+          <span>Relación con Inversores</span>
+          <span>Suma tu cocina</span>
+          <span>Iniciar sesión</span>
+          <span>Registrarse</span>
         </div>
       </nav>
       <div className="hamburger" onClick={() => setOpen(!open)}>
@@ -26,28 +26,28 @@ const Header = () => {
         <div className="sideMenu">
           <img src={blackLogo} alt="logo" />
           <div className="innerMenu">
-            <span>Investor Relations</span>
-            <span>Add restaurants</span>
-            <span>Log In</span>
-            <span>Sign Up</span>
+            <span>Relación con Inversores</span>
+            <span>Suma tu cocina</span>
+            <span>Iniciar Sesión</span>
+            <span>Registrarse</span>
           </div>
         </div>
       )}
       <div className="headerContent">
         <img src={Logo} alt="logo" />
-        <h3>Discover the best food & drinks in Patna</h3>
+        <h3>Descubre la mejor comida casera y saludable</h3>
         <div className="input">
           <select name="" id="">
-            <option value="Chennai">Chennai</option>
-            <option value="Jaipur">Jaipur</option>
-            <option value="Delhi">Delhi</option>
-            <option value="Mumbai">Mumbai</option>
-            <option value="Kolkata">Kolkata</option>
+            <option value="Lima">Lima</option>
+            <option value="Santiago">Santiago</option>
+            <option value="Bogota">Bogotá</option>
+            <option value="Mexico">Ciudad de México</option>
+            <option value="BuenosAires">Buenos Aires</option>
           </select>
           |
           <input
             type="text"
-            placeholder="Search for restaurant, cuisine or a dish"
+            placeholder="Busca cocinas, platos saludables o menús caseros"
           />
         </div>
       </div>

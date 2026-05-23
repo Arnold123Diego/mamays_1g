@@ -18,128 +18,33 @@
 
 .cta {
   width: 100%;
-  background-color: #f6ebf6;
+  background-color: #e83a3a;
   padding: 50px 200px;
   display: flex;
   justify-content: center;
 
-  @include mobile {
-    padding: 10px;
-    flex-direction: column;
-  }
-
-  @include tablet {
-    padding: 10px;
-  }
-
-  .left {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    padding: 50px;
-
-    img {
-      width: 80%;
-      object-fit: cover;
-    }
-  }
-
   .right {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    padding: 10px auto;
-    gap: 30px;
-
     h1 {
-      color: #222;
-      font-size: 3rem;
-      font-weight: normal;
+      color: #ffffff;
     }
-
     p {
-      font-size: 16px;
-      color: #333;
-      font-weight: normal;
-      letter-spacing: 0.1rem;
+      color: #ffffff;
     }
-
-    .radio {
-      display: flex;
-      gap: 20px;
-
-      .radioBtn {
-        display: flex;
-        gap: 8px;
-
-        input {
-          width: 50px;
-          outline: lightcoral;
-          cursor: pointer;
-        }
-
-        label {
-          font-size: 18px;
-          color: #222;
-          font-weight: normal;
-        }
-      }
+    .radio .radioBtn label {
+      color: #ffffff;
     }
-
     .input {
-      display: flex;
-      gap: 20px;
-      @include mobile {
-        flex-direction: column;
-      }
-      input {
-        min-width: 250px;
-        padding: 10px 14px;
-        border: 1px solid lightgray;
-        border-radius: 5px;
-
-        &::placeholder {
-          color: lightgray;
-          font-weight: bold;
-        }
-      }
-
       button {
-        border: none;
-        background-color: rgb(225, 59, 59);
-        padding: 10px 14px;
-        cursor: pointer;
-        color: white;
-        border-radius: 5px;
-        letter-spacing: 0.07rem;
-        font-size: 16px;
-        font-weight: normal;
-
+        background-color: #ffffff;
+        color: #e83a3a;
+        font-weight: bold;
         &:hover {
-          background-color: rgb(196, 34, 34);
+          background-color: #f0f0f0;
         }
       }
     }
-
     span {
-      color: gray;
-    }
-    .img {
-      display: flex;
-      gap: 20px;
-
-      @include mobile {
-        gap: 10px;
-      }
-
-      img {
-        width: 150px;
-        cursor: pointer;
-
-        @include mobile {
-          width: 120px;
-        }
-      }
+      color: #ffffff;
     }
   }
 }

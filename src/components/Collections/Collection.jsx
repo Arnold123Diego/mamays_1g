@@ -9,43 +9,43 @@ import collection4 from "../../assets/images/collection4.webp";
 const Collection = () => {
   return (
     <div className="collection">
-      <h1>Collection</h1>
+      <h1>Colecciones</h1>
       <div className="collectionText">
         <p>
-          Explore curated lists of top restaurants, cafes, pubs, and bars in
-          Ahmedabad, based on trends
+          Explora nuestras selecciones de comida saludable, opciones caseras y
+          los mejores planes nutricionales de la ciudad.
         </p>
         <span>
-          All collection in Ahmedabad <ArrowRightIcon />
+          Ver todas las colecciones <ArrowRightIcon />
         </span>
       </div>
       <div className="collectionCard">
         <div className="collectionImg">
           <img src={collection1} alt="img" />
-          <h3>10 Must-Visit Places for Christmas</h3>
+          <h3>Top 10 Platos Saludables</h3>
           <span>
-            9 Places <ArrowRightIcon />
+            10 Opciones <ArrowRightIcon />
           </span>
         </div>
         <div className="collectionImg">
           <img src={collection2} alt="img2" />
-          <h3>7 Finest Buffet Places</h3>
+          <h3>Menús del Día Caseros</h3>
           <span>
-            7 Places <ArrowRightIcon />
+            15 Lugares <ArrowRightIcon />
           </span>
         </div>
         <div className="collectionImg">
           <img src={collection3} alt="img4" />
-          <h3>Top 8 Picturesque Cafes</h3>
+          <h3>Desayunos Nutritivos</h3>
           <span>
-            7 Places <ArrowRightIcon />
+            8 Opciones <ArrowRightIcon />
           </span>
         </div>
         <div className="collectionImg">
           <img src={collection4} alt="img4" />
-          <h3>10 Best Luxury Dining Places</h3>
+          <h3>Cenas Ligeras y Rápidas</h3>
           <span>
-            10 Places <ArrowRightIcon />
+            12 Opciones <ArrowRightIcon />
           </span>
         </div>
       </div>

@@ -2,55 +2,46 @@ pipeline {
     agent any
 
     environment {
-        ANYPOINT_CREDENTIALS = credentials('anypoint.credentials')
+        DOCKER_IMAGE = "mamays-frontend"
+        DOCKER_TAG = "latest"
     }
 
     stages {
-        stage('Unit Test') {
+        stage('Install Dependencies') {
             steps {
-                echo "Running Unit Tests..."
-                sh 'mvn clean test'
+                echo 'Installing dependencies...'
+                sh 'npm install'
             }
         }
 
-        stage('Deploy Standalone') {
+        stage('Linter & Tests') {
             steps {
-                echo "Deploying in Standalone mode..."
-                sh 'mvn deploy -P standalone'
+                echo 'Running tests...'
+                sh 'npm test -- --watchAll=false'
             }
         }
 
-        stage('Deploy to AnyPoint') {
+        stage('Build Docker Image') {
             steps {
-                echo "Deploying to Anypoint Platform..."
-                sh '''
-                mvn deploy -P arm \
-                -Darm.target.name=local-4.0.0-ee \
-                -Danypoint.username=${ANYPOINT_CREDENTIALS_USR} \
-                -Danypoint.password=${ANYPOINT_CREDENTIALS_PSW}
-                '''
+                echo 'Building Docker image...'
+                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
             }
         }
 
-        stage('Deploy to CloudHub') {
+        stage('Deploy to Minikube') {
             steps {
-                echo "Deploying to CloudHub..."
-                sh '''
-                mvn deploy -P cloudhub \
-                -Dmule.version=4.0.0 \
-                -Danypoint.username=${ANYPOINT_CREDENTIALS_USR} \
-                -Danypoint.password=${ANYPOINT_CREDENTIALS_PSW}
-                '''
+                echo 'Deploying to Kubernetes...'
+                sh 'kubectl apply -f k8s/mamays-k8s.yaml'
             }
         }
     }
 
     post {
         success {
-            echo "✅ Deployment completed successfully!"
+            echo "✅ Pipeline completed successfully!"
         }
         failure {
-            echo "❌ Deployment failed! Check logs for errors."
+            echo "❌ Pipeline failed! Check logs."
         }
     }
 }

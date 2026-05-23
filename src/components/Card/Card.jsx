@@ -8,19 +8,19 @@ const Card = () => {
   return (
     <div className="card">
       <div className="cardImg">
+        <img src={Online} alt="onlineImg" />
+        <h1>Alimentación Saludable</h1>
+        <span>Comida nutritiva y balanceada a tu puerta</span>
+      </div>
+      <div className="cardImg">
         <img src={Dine} alt="dineImg" />
-        <h1>Order Online</h1>
-        <span>Stay home and order to your doorstep</span>
+        <h1>Comida Casera</h1>
+        <span>El sabor de mamá, listo para disfrutar</span>
       </div>
       <div className="cardImg">
         <img src={Night} alt="nightImg" />
-        <h1>Nightlife and Clubs</h1>
-        <span>Explore the city's top nightlife outlets</span>
-      </div>
-      <div className="cardImg">
-        <img src={Online} alt="onlineImg" />
-        <h1>Dinning</h1>
-        <span>Views the city's favourite venues</span>
+        <h1>Planes Nutricionales</h1>
+        <span>Suscripciones adaptadas a tus necesidades</span>
       </div>
     </div>
   );

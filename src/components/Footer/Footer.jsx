@@ -13,7 +13,7 @@ const Footer = () => {
     <div className="footer">
       <div className="top">
         <div className="top1">
-          <h2>Zomato</h2>
+          <h2>Mamays</h2>
           <div className="lang">
             <select>
               <option value="India">India</option>
@@ -35,7 +35,7 @@ const Footer = () => {
         </div>
         <div className="bottom1">
           <div className="bottomContent">
-            <h4>ABOUT ZOMATO</h4>
+            <h4>ABOUT MAMAYS</h4>
             <p>who we are</p>
             <p>blog</p>
             <p>work with us</p>
@@ -44,19 +44,19 @@ const Footer = () => {
             <p>Contact Us</p>
           </div>
           <div className="bottomContent">
-            <h4>ZOMAVERSE</h4>
-            <p>Zomato</p>
+            <h4>MAMAYSVERSE</h4>
+            <p>Mamays</p>
             <p>Blinkit</p>
             <p>Feeding India</p>
             <p>HyperPure</p>
-            <p>Zomaland</p>
+            <p>Mamaysland</p>
           </div>
           <div className="bottomContent">
             <h4>FOR RESTAURANTS</h4>
             <p>Patner with Us</p>
             <p>Apps For you</p>
             <h4>For Enterprises</h4>
-            <p>Zomato for work</p>
+            <p>Mamays for work</p>
           </div>
           <div className="bottomContent">
             <h4>LEARN MORE</h4>
@@ -84,7 +84,7 @@ const Footer = () => {
         <p>
           By continuing past this page, you agree to our Terms of Service,
           Cookie Policy, Privacy Policy and Content Policies. All trademarks are
-          properties of their respective owners. 2008-2022 © Zomato™ Ltd. All
+          properties of their respective owners. 2008-2022 © Mamays™ Ltd. All
           rights reserved.
         </p>
       </div>

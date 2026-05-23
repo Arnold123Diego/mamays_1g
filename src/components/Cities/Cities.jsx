@@ -7,13 +7,13 @@ const Cities = () => {
   return (
     <div className="cities">
       <h1>
-        Popular localities in and around <span>Ahmedabad</span>
+        Localidades populares en y alrededor de <span>Puno</span>
       </h1>
       <div className="cityContainer">
         <div className="city">
           <div className="cityLeft">
-            <h3>Bodakdev</h3>
-            <span>345 Places</span>
+            <h3>Puno Centro</h3>
+            <span>120 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -21,8 +21,8 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>Setellite</h3>
-            <span>336 Places</span>
+            <h3>Juliaca</h3>
+            <span>250 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -30,8 +30,8 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>Gurukul</h3>
-            <span>83 Places</span>
+            <h3>Chucuito</h3>
+            <span>45 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -39,8 +39,8 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>Navrangpura</h3>
-            <span>302 Places</span>
+            <h3>Ilave</h3>
+            <span>80 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -48,8 +48,8 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>Vastrapur</h3>
-            <span>217 Places</span>
+            <h3>Ayaviri</h3>
+            <span>60 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -57,8 +57,8 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>Thaltej</h3>
-            <span>222 Places</span>
+            <h3>Huancané</h3>
+            <span>35 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -66,8 +66,8 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>Prahalad Nagar</h3>
-            <span>181 Places</span>
+            <h3>Azángaro</h3>
+            <span>55 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -75,8 +75,8 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>C G Road</h3>
-            <span>94 Places</span>
+            <h3>Lampa</h3>
+            <span>40 Cocinas</span>
           </div>
           <div className="icon">
             <ChevronRightIcon />
@@ -84,7 +84,7 @@ const Cities = () => {
         </div>
         <div className="city">
           <div className="cityLeft">
-            <h3>See more</h3>
+            <h3>Ver más</h3>
           </div>
           <div className="icon">
             <KeyboardArrowDownIcon />

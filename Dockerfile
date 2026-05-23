@@ -1,32 +1,26 @@
-# Use an official Node.js image as the base (LTS version for stability)
-FROM node:18-alpine AS builder
-
-# Set the working directory inside the container
+# --- Etapa 1: Construcción (Build) ---
+FROM node:18-alpine AS build
 WORKDIR /app
 
-# Copy package.json and package-lock.json first (Leverage Docker cache)
+# Copiar archivos de dependencias
 COPY package*.json ./
 
-# Install dependencies in a clean environment
-RUN npm ci --only=production
+# Instalar dependencias
+RUN npm install
 
-# Copy the rest of the application source code
+# Copiar el resto del código y construir la app
 COPY . .
-
-# Build the React app
 RUN npm run build
 
-# ---- Production Stage ----
-FROM node:18-alpine
+# --- Etapa 2: Producción (Servidor Nginx) ---
+FROM nginx:stable-alpine
 
-# Set the working directory
-WORKDIR /app
+# Copiar los archivos estáticos desde la etapa de build
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy the built React app from the builder stage
-COPY --from=builder /app .
+# Copiar configuración personalizada de nginx si fuera necesario (opcional)
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 80
 
-# Start the application
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]

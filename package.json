@@ -1,5 +1,5 @@
 {
-  "name": "zomato_clone",
+  "name": "mamays_app",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -17,8 +17,10 @@
     "web-vitals": "^3.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "electron-pack": "npm run build && electron-builder",
     "test": "react-scripts test --watchAll",
     "eject": "react-scripts eject",
     "lint": "eslint . --fix",
@@ -43,7 +45,11 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.48.0",
-    "prettier": "^3.1.0"
+    "concurrently": "^9.2.1",
+    "electron": "^41.7.0",
+    "electron-builder": "^26.8.1",
+    "electron-is-dev": "^3.0.1",
+    "prettier": "^3.1.0",
+    "wait-on": "^9.0.10"
   }
 }

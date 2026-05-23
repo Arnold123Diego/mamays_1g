@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mamays-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mamays-frontend:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - mamays-api
+    networks:
+      - mamays-network
+
+  mamays-api:
+    build:
+      context: ./backend
+    image: mamays-backend:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/mamaysdb
+    depends_on:
+      - mongodb
+    networks:
+      - mamays-network
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - mamays-network
+
+networks:
+  mamays-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
