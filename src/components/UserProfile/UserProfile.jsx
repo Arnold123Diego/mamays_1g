@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './UserProfile.scss';
 import { 
   Box, Tabs, Tab, TextField, Button, Typography, Container, Paper, 
-  Avatar, IconButton, MenuItem, Grid, Chip, Divider 
+  Avatar, IconButton, Grid, Chip, Divider 
 } from '@mui/material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
