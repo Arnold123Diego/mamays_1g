@@ -8,6 +8,8 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Typography, Button, Grid, Avatar, Divider, Chip, Modal, IconButton, Paper } from '@mui/material';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const DishDetail = ({ dish, onBack }) => {
   const [seller, setSeller] = useState(null);
   const [openLightbox, setOpenLightbox] = useState(false);
@@ -15,7 +17,7 @@ const DishDetail = ({ dish, onBack }) => {
 
   useEffect(() => {
     if (dish.cocineroId) {
-      fetch(`http://localhost:5000/api/users/${dish.cocineroId}`)
+      fetch(`${API_URL}/api/users/${dish.cocineroId}`)
         .then(res => res.json())
         .then(data => setSeller(data))
         .catch(err => console.error('Error fetching seller:', err));

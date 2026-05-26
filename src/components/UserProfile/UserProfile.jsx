@@ -8,6 +8,8 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const UserProfile = ({ userRole, onBack, onClearRole }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [activeTab, setActiveTab] = useState(0);
@@ -30,7 +32,7 @@ const UserProfile = ({ userRole, onBack, onClearRole }) => {
 
   const handleSave = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/user/update', {
+      const res = await fetch(`${API_URL}/api/user/update`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email, ...profileData })

@@ -7,13 +7,15 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const DishFeed = ({ onDishClick }) => {
   const [dishes, setDishes] = useState([]);
   const [favorites, setFavorites] = useState({});
   const [filterCat, setFilterCat] = useState('Todos');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/dishes')
+    fetch(`${API_URL}/api/dishes`)
       .then(res => res.json())
       .then(data => setDishes(data))
       .catch(err => console.error('Error fetching dishes:', err));
