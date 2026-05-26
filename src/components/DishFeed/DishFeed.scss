@@ -1,0 +1,239 @@
+.dish-feed {
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: #777;
+      font-size: 1rem;
+      margin: 0;
+    }
+  }
+
+  &__filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 32px;
+
+    .filter-btn {
+      padding: 8px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 50px;
+      background: white;
+      color: #555;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #e83a3a;
+        color: #e83a3a;
+      }
+
+      &.active {
+        background: #e83a3a;
+        border-color: #e83a3a;
+        color: white;
+      }
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+}
+
+.dish-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  }
+
+  &__banner {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 16px 16px 0 0;
+  }
+
+  &__emoji {
+    font-size: 4rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
+
+  &__fav {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.25);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: rgba(0,0,0,0.45);
+    }
+  }
+
+  &__categoria {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.3);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  &__nombre {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  &__cocinero {
+    font-size: 0.85rem;
+    color: #e83a3a;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__rating,
+  &__ubicacion {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.82rem;
+    color: #555;
+    font-weight: 500;
+  }
+
+  &__desc {
+    font-size: 0.85rem;
+    color: #777;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__horario {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: #999;
+    background: #f8f8f8;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  &__precio {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1a1a1a;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #e83a3a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s;
+
+    &:hover {
+      background: #c52d2d;
+      transform: scale(1.02);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .dish-feed {
+    padding: 24px 16px;
+
+    &__header h2 {
+      font-size: 1.5rem;
+    }
+
+    &__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

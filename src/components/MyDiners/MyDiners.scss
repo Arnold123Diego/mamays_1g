@@ -1,0 +1,24 @@
+.my-diners-container {
+  padding-bottom: 50px;
+  animation: fadeIn 0.5s ease-in-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .MuiTableCell-head {
+    font-weight: bold;
+    color: #555;
+  }
+
+  .MuiTableRow-root {
+    transition: background-color 0.3s;
+  }
+}

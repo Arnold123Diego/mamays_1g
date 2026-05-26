@@ -1,0 +1,29 @@
+.user-profile-container {
+  padding-bottom: 50px;
+
+  .profile-section {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .MuiTab-root {
+    font-weight: bold;
+    &.Mui-selected {
+      color: #e83a3a !important;
+    }
+  }
+
+  .MuiTabs-indicator {
+    background-color: #e83a3a !important;
+  }
+}

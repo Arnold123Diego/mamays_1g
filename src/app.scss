@@ -1,7 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
-$mamays-red: #e83a3a;
-$mamays-white: #ffffff;
+// Colores definidos por el usuario
+$color1-hex: #ff5050;
+$color1-rgb: rgba(255, 80, 80);
+
+$color2-hex: #f43c3c;
+$color2-rgb: rgba(244, 60, 60);
+
+$color3-hex: #ffffff;
+$color3-rgb: rgba(255, 255, 255);
 
 * {
   margin: 0;
@@ -10,7 +17,7 @@ $mamays-white: #ffffff;
 }
 
 body {
-  background-color: $mamays-red;
-  color: $mamays-white;
+  background-color: $color3-hex;
+  color: #333;
   font-family: 'Poppins', sans-serif;
 }

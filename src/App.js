@@ -1,44 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./components/Header/Header";
 import "./app.scss";
 import Footer from "./components/Footer/Footer";
 import AccContainer from "./components/AccContainer/AccContainer";
 import CTA from "./components/CTA/CTA";
-import Cities from "./components/Cities/Cities";
-import Collection from "./components/Collections/Collection";
-import Card from "./components/Card/Card";
-import Map from "./components/Map/Map";
-import { useState } from "react";
+import DishFeed from "./components/DishFeed/DishFeed";
+import UserProfile from "./components/UserProfile/UserProfile";
+import PublishDish from "./components/PublishDish/PublishDish";
+import MyDiners from "./components/MyDiners/MyDiners";
+import MyMamays from "./components/MyMamays/MyMamays";
+import AuthForm from "./components/AuthForm/AuthForm";
+import DishDetail from "./components/DishDetail/DishDetail";
 
 function App() {
-  const [userRole, setUserRole] = useState(null); // 'buyer', 'cook', 'admin'
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [view, setView] = useState('home');
+  const [selectedDish, setSelectedDish] = useState(null);
 
-  if (!userRole) {
+  const handleClearSession = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    setView('home');
+  };
+
+  const handleDishClick = (dish) => {
+    setSelectedDish(dish);
+    setView('dish-detail');
+  };
+
+  if (!user) {
     return (
-      <div className="App" style={{ backgroundColor: '#e83a3a', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-        <h1 style={{ color: 'white', fontSize: '3rem', marginBottom: '40px' }}>Bienvenido a Mamays Puno</h1>
-        <p style={{ color: 'white', fontSize: '1.2rem', marginBottom: '40px' }}>¿Cómo quieres participar hoy?</p>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <button onClick={() => setUserRole('buyer')} style={{ padding: '20px 40px', fontSize: '1.2rem', borderRadius: '10px', border: 'none', cursor: 'pointer', backgroundColor: 'white', color: '#e83a3a', fontWeight: 'bold' }}>Quiero Comer (Comprador)</button>
-          <button onClick={() => setUserRole('cook')} style={{ padding: '20px 40px', fontSize: '1.2rem', borderRadius: '10px', border: 'none', cursor: 'pointer', backgroundColor: 'white', color: '#e83a3a', fontWeight: 'bold' }}>Quiero Cocinar (Ama de Casa)</button>
-        </div>
+      <div style={{ backgroundColor: '#e83a3a', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <AuthForm onAuthSuccess={(userData) => setUser(userData)} />
       </div>
     );
   }
 
   return (
     <div className="App">
-      <Header />
-      <div style={{ padding: '10px', textAlign: 'center', backgroundColor: 'white', color: '#e83a3a' }}>
-        <strong>Modo: {userRole === 'buyer' ? 'Buscando comida casera' : 'Gestionando mi cocina'}</strong>
-        <button onClick={() => setUserRole(null)} style={{ marginLeft: '20px', background: 'none', border: '1px solid #e83a3a', cursor: 'pointer', borderRadius: '5px' }}>Cambiar</button>
-      </div>
-      <Card />
-      <Map />
-      <Collection />
-      <Cities />
-      <CTA />
-      <AccContainer />
+      <Header 
+        onProfileClick={() => setView('profile')} 
+        onHomeClick={() => setView('home')} 
+        onPublishClick={() => setView('publish-dish')}
+        onDinersClick={() => setView('diners')}
+        onLogout={handleClearSession}
+        currentView={view}
+        userRole={user.rol}
+      />
+      
+      {view === 'home' && (
+        <>
+          <DishFeed onDishClick={handleDishClick} />
+          <CTA />
+          <AccContainer />
+        </>
+      )}
+
+      {view === 'profile' && (
+        <UserProfile userRole={user.rol} onBack={() => setView('home')} onClearRole={handleClearSession} />
+      )}
+
+      {view === 'publish-dish' && (
+        <PublishDish onBack={() => setView('home')} />
+      )}
+
+      {view === 'diners' && (
+        user.rol === 'cook' ? <MyDiners onBack={() => setView('home')} /> : <MyMamays onBack={() => setView('home')} />
+      )}
+
+      {view === 'dish-detail' && selectedDish && (
+        <DishDetail dish={selectedDish} onBack={() => setView('home')} />
+      )}
+      
       <Footer />
     </div>
   );
