@@ -86,20 +86,22 @@
   }
 
   .sideMenu {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 80%;
+    max-width: 300px;
     height: 100vh;
     background-color: white;
-    z-index: 3;
+    z-index: 1000;
     transition: all 0.4s ease;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 
     img {
-      width: 200px;
+      width: 150px;
       position: absolute;
       top: 25px;
-      right: 10px;
+      left: 20px;
     }
 
     .innerMenu {
@@ -107,14 +109,21 @@
       flex-direction: column;
       padding: 20px;
       position: absolute;
+      width: 100%;
       justify-content: flex-start;
-      gap: 30px;
-      top: 20%;
+      gap: 20px;
+      top: 15%;
 
       span {
         font-size: 18px;
-        color: gray;
-        font-weight: normal;
+        color: #333;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 5px 0;
+
+        &:hover {
+          color: #e83a3a;
+        }
       }
     }
   }

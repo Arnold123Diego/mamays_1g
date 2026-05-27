@@ -85,8 +85,19 @@ const Header = ({ onProfileClick, onHomeClick, onPublishClick, onDinersClick, on
                 <span onClick={() => { onLogout(); setOpen(false); }}>Cerrar Sesión</span>
               </>
             ) : (
-              <span onClick={() => { onLoginClick(); setOpen(false); }} style={{ color: '#e83a3a', fontWeight: 'bold' }}>
-                Iniciar Sesión
+              <span 
+                onClick={() => { onLoginClick(); setOpen(false); }} 
+                style={{ 
+                  color: 'white', 
+                  fontWeight: 'bold',
+                  backgroundColor: '#e83a3a',
+                  padding: '12px 25px',
+                  borderRadius: '25px',
+                  textAlign: 'center',
+                  marginTop: '10px'
+                }}
+              >
+                Registrarse / Iniciar Sesión
               </span>
             )}
           </div>
