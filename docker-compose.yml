@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mamays-app:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile
     image: mamays-frontend:latest
     ports:

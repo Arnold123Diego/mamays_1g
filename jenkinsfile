@@ -10,21 +10,25 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'npm install'
+                dir('frontend') {
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Linter & Tests') {
             steps {
                 echo 'Running tests...'
-                sh 'npm test -- --watchAll=false'
+                dir('frontend') {
+                    sh 'npm test -- --watchAll=false'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} frontend/"
             }
         }
 

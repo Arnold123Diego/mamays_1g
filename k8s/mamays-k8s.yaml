@@ -1,35 +1,70 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mamays-api-service
+spec:
+  selector:
+    app: mamays-api
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: NodePort
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mamays-deployment
-  labels:
-    app: mamays
+  name: mamays-api-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: mamays
+      app: mamays-api
   template:
     metadata:
       labels:
-        app: mamays
+        app: mamays-api
     spec:
       containers:
-      - name: mamays-app
-        image: mamays-frontend:latest
-        imagePullPolicy: Never # Útil para Minikube cuando usas imágenes locales
-        ports:
-        - containerPort: 80
+        - name: mamays-api
+          image: mamays-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              value: "mongodb+srv://filosotigre_db_user:yh1zPTS2u7j2YHRq@mamayscluster.1ykazme.mongodb.net/mamaysdb?retryWrites=true&w=majority&appName=MamaysCluster"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mamays-service
+  name: mamays-frontend-service
 spec:
   selector:
-    app: mamays
+    app: mamays-frontend
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
   type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mamays-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mamays-frontend
+  template:
+    metadata:
+      labels:
+        app: mamays-frontend
+    spec:
+      containers:
+        - name: mamays-frontend
+          image: mamays-frontend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
