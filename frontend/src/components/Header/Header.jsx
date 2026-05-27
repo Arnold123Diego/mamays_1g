@@ -6,9 +6,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import blackLogo from "../../assets/images/logo_nuevo2.png";
 import { Divider } from "@mui/material";
 
-const Header = ({ onProfileClick, onHomeClick, onPublishClick, onDinersClick, onLogout, currentView, userRole }) => {
+const Header = ({ onProfileClick, onHomeClick, onPublishClick, onDinersClick, onLogout, onLoginClick, currentView, user }) => {
   const [open, setOpen] = useState(false);
   const isHome = currentView === 'home';
+  const userRole = user?.rol;
 
   return (
     <div className={`header ${!isHome ? 'header-compact' : ''}`}>
@@ -32,18 +33,34 @@ const Header = ({ onProfileClick, onHomeClick, onPublishClick, onDinersClick, on
           )}
         </div>
         <div className="right">
-          <span style={{ cursor: 'pointer' }} onClick={onDinersClick}>
-            {userRole === 'cook' ? 'Mis Comensales' : 'Mis Mamays'}
-          </span>          {userRole === 'cook' && (
+          {user ? (
+            <>
+              <span style={{ cursor: 'pointer' }} onClick={onDinersClick}>
+                {userRole === 'cook' ? 'Mis Comensales' : 'Mis Mamays'}
+              </span>
+              {userRole === 'cook' && (
+                <span style={{ cursor: 'pointer' }} onClick={onPublishClick}>
+                  + Publicar Plato
+                </span>
+              )}
+              <span style={{ cursor: 'pointer' }} onClick={onProfileClick}>Mi Perfil</span>
+              <span style={{ cursor: 'pointer' }} onClick={onLogout}>Cerrar sesión</span>
+            </>
+          ) : (
             <span 
-              style={{ cursor: 'pointer' }} 
-              onClick={onPublishClick}
+              style={{ 
+                cursor: 'pointer', 
+                fontWeight: 'bold', 
+                backgroundColor: isHome ? 'rgba(255,255,255,0.2)' : '#e83a3a',
+                color: 'white',
+                padding: '8px 20px',
+                borderRadius: '20px'
+              }} 
+              onClick={onLoginClick}
             >
-              + Publicar Plato
+              Registrarse / Iniciar Sesión
             </span>
           )}
-          <span style={{ cursor: 'pointer' }} onClick={onProfileClick}>Mi Perfil</span>
-          <span style={{ cursor: 'pointer' }} onClick={onLogout}>Cerrar sesión</span>
         </div>
       </nav>
       
@@ -52,18 +69,26 @@ const Header = ({ onProfileClick, onHomeClick, onPublishClick, onDinersClick, on
           <img src={blackLogo} alt="logo" onClick={() => { onHomeClick(); setOpen(false); }} style={{ cursor: 'pointer' }} />
           <div className="innerMenu">
             <span onClick={() => { onHomeClick(); setOpen(false); }}>Inicio</span>
-            <span>Ganancias</span>
-            <span>Tips</span>
-            <span>Puntos</span>
-            <Divider sx={{ my: 1 }} />
-            <span onClick={() => { onDinersClick(); setOpen(false); }}>
-              {userRole === 'cook' ? 'Mis Comensales' : 'Mis Mamays'}
-            </span>
-            {userRole === 'cook' && (
-              <span onClick={() => { onPublishClick(); setOpen(false); }}>Publicar Plato</span>
+            {user ? (
+              <>
+                <span>Ganancias</span>
+                <span>Tips</span>
+                <span>Puntos</span>
+                <Divider sx={{ my: 1 }} />
+                <span onClick={() => { onDinersClick(); setOpen(false); }}>
+                  {userRole === 'cook' ? 'Mis Comensales' : 'Mis Mamays'}
+                </span>
+                {userRole === 'cook' && (
+                  <span onClick={() => { onPublishClick(); setOpen(false); }}>Publicar Plato</span>
+                )}
+                <span onClick={() => { onProfileClick(); setOpen(false); }}>Mi Perfil</span>
+                <span onClick={() => { onLogout(); setOpen(false); }}>Cerrar Sesión</span>
+              </>
+            ) : (
+              <span onClick={() => { onLoginClick(); setOpen(false); }} style={{ color: '#e83a3a', fontWeight: 'bold' }}>
+                Iniciar Sesión
+              </span>
             )}
-            <span onClick={() => { onProfileClick(); setOpen(false); }}>Mi Perfil</span>
-            <span onClick={() => { onLogout(); setOpen(false); }}>Cerrar Sesión</span>
           </div>
         </div>
       )}

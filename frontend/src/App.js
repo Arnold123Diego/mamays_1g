@@ -28,14 +28,6 @@ function App() {
     setView('dish-detail');
   };
 
-  if (!user) {
-    return (
-      <div style={{ backgroundColor: '#e83a3a', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <AuthForm onAuthSuccess={(userData) => setUser(userData)} />
-      </div>
-    );
-  }
-
   return (
     <div className="App">
       <Header 
@@ -44,8 +36,9 @@ function App() {
         onPublishClick={() => setView('publish-dish')}
         onDinersClick={() => setView('diners')}
         onLogout={handleClearSession}
+        onLoginClick={() => setView('login')}
         currentView={view}
-        userRole={user.rol}
+        user={user}
       />
       
       {view === 'home' && (
@@ -56,15 +49,21 @@ function App() {
         </>
       )}
 
-      {view === 'profile' && (
+      {view === 'login' && (
+        <div style={{ backgroundColor: '#e83a3a', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+          <AuthForm onAuthSuccess={(userData) => { setUser(userData); setView('home'); }} />
+        </div>
+      )}
+
+      {view === 'profile' && user && (
         <UserProfile userRole={user.rol} onBack={() => setView('home')} onClearRole={handleClearSession} />
       )}
 
-      {view === 'publish-dish' && (
+      {view === 'publish-dish' && user && (
         <PublishDish onBack={() => setView('home')} />
       )}
 
-      {view === 'diners' && (
+      {view === 'diners' && user && (
         user.rol === 'cook' ? <MyDiners onBack={() => setView('home')} /> : <MyMamays onBack={() => setView('home')} />
       )}
 
