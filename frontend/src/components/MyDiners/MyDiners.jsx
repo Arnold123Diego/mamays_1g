@@ -11,8 +11,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import DeleteIcon from '@mui/icons-material/Delete';
+import React, { useState, useEffect, useCallback } from 'react';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+...
 
 const MyDiners = ({ onBack }) => {
   const [diners, setDiners] = useState([]);
@@ -20,7 +21,7 @@ const MyDiners = ({ onBack }) => {
   const [reportText, setReportText] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
-  const fetchReservations = async () => {
+  const fetchReservations = useCallback(async () => {
     if (!user) return;
     try {
       const res = await fetch(`${API_URL}/api/reservations/cook/${user._id}`);
@@ -29,12 +30,11 @@ const MyDiners = ({ onBack }) => {
     } catch (err) {
       console.error('Error fetching reservations:', err);
     }
-  };
+  }, [user?._id]);
 
   useEffect(() => {
     fetchReservations();
-  }, [user._id]);
-
+  }, [fetchReservations]);
   const updateReservation = async (id, updateData) => {
     try {
       const res = await fetch(`${API_URL}/api/reservations/${id}`, {
