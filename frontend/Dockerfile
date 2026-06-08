@@ -5,8 +5,8 @@ WORKDIR /app
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias
-RUN npm install
+# Instalar dependencias (Solo producción para evitar Electron en Docker)
+RUN npm install --omit=dev
 
 # Copiar el resto del código y construir la app
 COPY . .

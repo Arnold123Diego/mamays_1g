@@ -2,11 +2,14 @@ import React, { useState, useRef } from 'react';
 import './UserProfile.scss';
 import { 
   Box, Tabs, Tab, TextField, Button, Typography, Container, Paper, 
-  Avatar, IconButton, Grid, Chip, Divider 
+  Avatar, IconButton, Grid, Chip, Divider, MenuItem, Select, FormControl, InputLabel
 } from '@mui/material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
+
+const dietaryOptions = ["Vegetariano", "Vegano", "Sin Gluten", "Keto", "Paleo", "Omnívoro"];
+const lifestyleOptions = ["Estudiante", "Trabajador Remoto", "Atleta", "Padre/Madre de familia", "Viajero", "Senior"];
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -92,19 +95,83 @@ const UserProfile = ({ userRole, onBack, onClearRole }) => {
 
         {activeTab === 1 && (
           <Box>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Estilo de Alimentación</InputLabel>
+                  <Select
+                    value={profileData.dietaryPrefs || ''}
+                    label="Estilo de Alimentación"
+                    onChange={e => setProfileData({...profileData, dietaryPrefs: e.target.value})}
+                  >
+                    {dietaryOptions.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Estilo de Vida</InputLabel>
+                  <Select
+                    value={profileData.estiloVida || ''}
+                    label="Estilo de Vida"
+                    onChange={e => setProfileData({...profileData, estiloVida: e.target.value})}
+                  >
+                    {lifestyleOptions.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            <Typography variant="h6" sx={{ mt: 3 }}>Platos Favoritos</Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 1 }}>
+              {(profileData.platosPreferidos || []).map((p, i) => (
+                <Chip key={i} label={p} onDelete={() => removeItem('platosPreferidos', i)} color="primary" variant="outlined" />
+              ))}
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <TextField 
+                size="small" 
+                fullWidth
+                placeholder="Ej: Lomo Saltado, Ceviche..." 
+                value={newItem.dish} 
+                onChange={e => setNewItem({...newItem, dish: e.target.value})}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddItem('dish', newItem.dish)}
+              />
+              <IconButton color="primary" onClick={() => handleAddItem('dish', newItem.dish)}>
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </Box>
+
+            <Typography variant="h6" sx={{ mt: 3 }}>Categorías Favoritas</Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 1 }}>
+              {(profileData.categoriasFavoritas || []).map((c, i) => (
+                <Chip key={i} label={c} onDelete={() => removeItem('categoriasFavoritas', i)} color="secondary" variant="outlined" />
+              ))}
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <TextField 
+                size="small" 
+                fullWidth
+                placeholder="Ej: Criolla, Marina, Postres..." 
+                value={newItem.category} 
+                onChange={e => setNewItem({...newItem, category: e.target.value})}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddItem('category', newItem.category)}
+              />
+              <IconButton color="secondary" onClick={() => handleAddItem('category', newItem.category)}>
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
             <Typography variant="h6">Alergias</Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 1 }}>
               {(profileData.alergias || []).map((a, i) => <Chip key={i} label={a} onDelete={() => removeItem('alergias', i)} />)}
             </Box>
-            <TextField size="small" placeholder="Añadir alergia" value={newItem.allergy} onChange={e => setNewItem({...newItem, allergy: e.target.value})} />
-            <IconButton onClick={() => handleAddItem('allergy', newItem.allergy)}><AddCircleOutlineIcon /></IconButton>
-            
-            <Typography variant="h6" sx={{ mt: 2 }}>Categorías Favoritas</Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 1 }}>
-              {(profileData.categoriasFavoritas || []).map((c, i) => <Chip key={i} label={c} onDelete={() => removeItem('categoriasFavoritas', i)} />)}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <TextField size="small" fullWidth placeholder="Añadir alergia" value={newItem.allergy} onChange={e => setNewItem({...newItem, allergy: e.target.value})} />
+              <IconButton onClick={() => handleAddItem('allergy', newItem.allergy)}><AddCircleOutlineIcon /></IconButton>
             </Box>
-            <TextField size="small" placeholder="Añadir categoría" value={newItem.category} onChange={e => setNewItem({...newItem, category: e.target.value})} />
-            <IconButton onClick={() => handleAddItem('category', newItem.category)}><AddCircleOutlineIcon /></IconButton>
           </Box>
         )}
 
@@ -114,6 +181,28 @@ const UserProfile = ({ userRole, onBack, onClearRole }) => {
             <Grid item xs={12} sm={6}><TextField fullWidth label="Banco" value={profileData.banco || ''} onChange={e => setProfileData({...profileData, banco: e.target.value})} /></Grid>
             <Grid item xs={12} sm={6}><TextField fullWidth label="Número Cuenta" value={profileData.numeroCuenta || ''} onChange={e => setProfileData({...profileData, numeroCuenta: e.target.value})} /></Grid>
             
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ mt: 2 }}>Servicios Adicionales</Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 1 }}>
+                {(profileData.serviciosAdicionales || []).map((s, i) => (
+                  <Chip key={i} label={s} onDelete={() => removeItem('serviciosAdicionales', i)} color="success" variant="outlined" />
+                ))}
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <TextField 
+                  size="small" 
+                  fullWidth
+                  placeholder="Ej: WiFi, Estacionamiento, Zona de juegos..." 
+                  value={newItem.service} 
+                  onChange={e => setNewItem({...newItem, service: e.target.value})}
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddItem('service', newItem.service)}
+                />
+                <IconButton color="success" onClick={() => handleAddItem('service', newItem.service)}>
+                  <AddCircleOutlineIcon />
+                </IconButton>
+              </Box>
+            </Grid>
+
             <Grid item xs={12}>
               <Divider sx={{ my: 2 }} />
               <Typography variant="h6" gutterBottom>Fotos del Ambiente (Comedor/Cocina)</Typography>
