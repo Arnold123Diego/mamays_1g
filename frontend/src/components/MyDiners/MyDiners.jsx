@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './MyDiners.scss';
 import { 
   Box, Typography, Container, Paper, Table, TableBody, 
@@ -11,9 +11,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import DeleteIcon from '@mui/icons-material/Delete';
-import React, { useState, useEffect, useCallback } from 'react';
 
-...
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const MyDiners = ({ onBack }) => {
   const [diners, setDiners] = useState([]);
