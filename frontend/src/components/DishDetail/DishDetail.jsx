@@ -6,7 +6,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Typography, Button, Grid, Avatar, Divider, Chip, Modal, IconButton, Paper } from '@mui/material';
+import { Box, Typography, Button, Grid, Avatar, Divider, Chip, Modal, IconButton, Paper, TextField, MenuItem, Select, FormControl, InputLabel, Stepper, Step, StepLabel } from '@mui/material';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -14,6 +14,15 @@ const DishDetail = ({ dish, onBack }) => {
   const [seller, setSeller] = useState(null);
   const [openLightbox, setOpenLightbox] = useState(false);
   const [selectedImg, setSelectedImg] = useState('');
+
+  // Estado para la reserva
+  const [openReserve, setOpenReserve] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [transactionId, setTransactionId] = useState('');
+  
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     if (dish.cocineroId) {
@@ -27,6 +36,46 @@ const DishDetail = ({ dish, onBack }) => {
   const handleOpenImg = (img) => {
     setSelectedImg(img);
     setOpenLightbox(true);
+  };
+
+  const handleReserve = async () => {
+    if (!user) return alert('Debes iniciar sesión para reservar');
+    
+    const reservationData = {
+      user: user._id,
+      dish: dish._id,
+      cook: dish.cocineroId,
+      quantity: quantity,
+      totalPrice: dish.precio * quantity,
+      paymentMethod: paymentMethod,
+      transactionId: transactionId,
+      paymentStatus: paymentMethod === 'cash' ? 'unpaid' : 'pending_verification',
+      reservationTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    try {
+      const res = await fetch(`${API_URL}/api/reservations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reservationData)
+      });
+      if (res.ok) {
+        alert('¡Reserva realizada con éxito! Revisa con la Mamay por WhatsApp.');
+        setOpenReserve(false);
+        setActiveStep(0);
+        setTransactionId('');
+      }
+    } catch (err) {
+      alert('Error al realizar la reserva');
+    }
+  };
+
+  const nextStep = () => {
+    if (paymentMethod === 'cash') {
+      handleReserve();
+    } else {
+      setActiveStep(1);
+    }
   };
 
   return (
@@ -73,7 +122,7 @@ const DishDetail = ({ dish, onBack }) => {
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, mb: 3, gap: 1.5 }}>
               <Avatar src={seller?.avatar} sx={{ width: 50, height: 50, border: '2px solid #f43c3c' }}>
-                {dish.cocinero[0]}
+                {dish.cocinero?.[0]}
               </Avatar>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold', lineHeight: 1 }}>{dish.cocinero}</Typography>
@@ -108,6 +157,20 @@ const DishDetail = ({ dish, onBack }) => {
 
             <Box sx={{ mt: 4 }}>
               <Typography variant="subtitle2" sx={{ mb: 2, color: '#888', textAlign: 'center' }}>¿LISTO PARA PEDIR? CONTACTA A LA MAMAY:</Typography>
+              
+              <Button 
+                variant="contained" 
+                fullWidth 
+                sx={{ 
+                    bgcolor: '#f43c3c', mb: 2, py: 1.8, borderRadius: '12px',
+                    fontSize: '1rem', fontWeight: 'bold', textTransform: 'none',
+                    '&:hover': { bgcolor: '#c52d2d' } 
+                }}
+                onClick={() => { setOpenReserve(true); setActiveStep(0); }}
+              >
+                Reservar en la App (S/. {dish.precio * quantity}.00)
+              </Button>
+
               <Button 
                 variant="contained" 
                 fullWidth 
@@ -140,6 +203,93 @@ const DishDetail = ({ dish, onBack }) => {
           </Paper>
         </Grid>
       </Grid>
+
+      {/* Modal de Reserva Multinivel */}
+      <Modal open={openReserve} onClose={() => setOpenReserve(false)} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Paper sx={{ p: 4, width: '90%', maxWidth: 450, borderRadius: 4 }}>
+          <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+            <Step><StepLabel>Detalles</StepLabel></Step>
+            <Step><StepLabel>Pago</StepLabel></Step>
+          </Stepper>
+
+          {activeStep === 0 ? (
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>{dish.nombre}</Typography>
+              <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>Confirma los detalles de tu reserva</Typography>
+
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField 
+                    type="number" 
+                    label="Cantidad" 
+                    fullWidth 
+                    value={quantity} 
+                    onChange={e => setQuantity(Math.max(1, Math.min(dish.porciones, parseInt(e.target.value) || 1)))}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Método de Pago</InputLabel>
+                    <Select value={paymentMethod} label="Método de Pago" onChange={e => setPaymentMethod(e.target.value)}>
+                      <MenuItem value="cash">Efectivo</MenuItem>
+                      <MenuItem value="yape">Yape</MenuItem>
+                      <MenuItem value="transfer">Transferencia</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+
+              <Box sx={{ mt: 4, textAlign: 'right' }}>
+                <Button onClick={() => setOpenReserve(false)} sx={{ mr: 2 }}>Cancelar</Button>
+                <Button variant="contained" onClick={nextStep} sx={{ bgcolor: '#f43c3c' }}>
+                  {paymentMethod === 'cash' ? 'Confirmar Reserva' : 'Siguiente'}
+                </Button>
+              </Box>
+            </Box>
+          ) : (
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Validación de Pago</Typography>
+              
+              <Box sx={{ bgcolor: '#f0f7ff', p: 2, borderRadius: 2, mb: 3 }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#0052cc' }}>
+                  {paymentMethod === 'yape' ? 'Yape al número:' : 'Transferencia al:'}
+                </Typography>
+                <Typography variant="h5" sx={{ textAlign: 'center', my: 1, fontWeight: '800' }}>
+                  {seller?.telefono || '900 000 000'}
+                </Typography>
+                <Typography variant="caption" display="block" align="center">
+                  A nombre de: {seller?.nombre} {seller?.apellido || ''}
+                </Typography>
+              </Box>
+
+              <TextField 
+                fullWidth 
+                label="Número de Operación" 
+                placeholder="Ej: 12345678"
+                value={transactionId}
+                onChange={e => setTransactionId(e.target.value.replace(/\D/g, ''))}
+                sx={{ mb: 2 }}
+              />
+
+              <Typography variant="caption" color="textSecondary">
+                * Tu reserva quedará como "Pendiente de Verificación" hasta que la Mamay valide el número de operación.
+              </Typography>
+
+              <Box sx={{ mt: 4, textAlign: 'right' }}>
+                <Button onClick={() => setActiveStep(0)} sx={{ mr: 2 }}>Atrás</Button>
+                <Button 
+                  variant="contained" 
+                  onClick={handleReserve} 
+                  disabled={!transactionId}
+                  sx={{ bgcolor: '#f43c3c' }}
+                >
+                  Enviar y Reservar
+                </Button>
+              </Box>
+            </Box>
+          )}
+        </Paper>
+      </Modal>
 
       {/* Lightbox Modal */}
       <Modal open={openLightbox} onClose={() => setOpenLightbox(false)} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

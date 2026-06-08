@@ -88,7 +88,20 @@ const UserProfile = ({ userRole, onBack, onClearRole }) => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}><TextField fullWidth label="Nombre" value={profileData.nombre || ''} onChange={e => setProfileData({...profileData, nombre: e.target.value})} /></Grid>
             <Grid item xs={12} sm={6}><TextField fullWidth label="Apellido" value={profileData.apellido || ''} onChange={e => setProfileData({...profileData, apellido: e.target.value})} /></Grid>
-            <Grid item xs={12} sm={6}><TextField fullWidth label="Teléfono" value={profileData.telefono || ''} onChange={e => setProfileData({...profileData, telefono: e.target.value})} /></Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField 
+                fullWidth 
+                label="Teléfono" 
+                value={profileData.telefono || ''} 
+                onChange={e => {
+                  const val = e.target.value.replace(/\D/g, ''); // Solo números
+                  if (val.length <= 9) {
+                    setProfileData({...profileData, telefono: val});
+                  }
+                }} 
+                inputProps={{ maxLength: 9 }}
+              />
+            </Grid>
             <Grid item xs={12} sm={6}><TextField fullWidth label="Fecha Nacimiento" type="date" InputLabelProps={{ shrink: true }} value={profileData.fechaNacimiento?.split('T')[0] || ''} onChange={e => setProfileData({...profileData, fechaNacimiento: e.target.value})} /></Grid>
           </Grid>
         )}

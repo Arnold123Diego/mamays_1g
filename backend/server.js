@@ -24,6 +24,7 @@ app.get('/', (req, res) => {
 const Kitchen = require('./models/Kitchen');
 const Dish = require('./models/Dish');
 const User = require('./models/User');
+const Reservation = require('./models/Reservation');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
@@ -68,8 +69,12 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, password });
+    const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ message: 'Credenciales inválidas' });
+    
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) return res.status(401).json({ message: 'Credenciales inválidas' });
+    
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -138,6 +143,53 @@ app.post('/api/kitchens', async (req, res) => {
     res.status(201).json(newKitchen);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// --- RUTAS DE RESERVAS ---
+
+// Crear una nueva reserva
+app.post('/api/reservations', async (req, res) => {
+  try {
+    const reservation = new Reservation(req.body);
+    await reservation.save();
+    
+    // Descontar porciones del plato
+    await Dish.findByIdAndUpdate(req.body.dish, { $inc: { porciones: -req.body.quantity } });
+    
+    res.status(201).json(reservation);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Obtener reservas para un cocinero
+app.get('/api/reservations/cook/:cookId', async (req, res) => {
+  try {
+    const reservations = await Reservation.find({ cook: req.params.cookId })
+      .populate('user', 'nombre email avatar')
+      .populate('dish', 'nombre precio')
+      .sort({ createdAt: -1 });
+    res.json(reservations);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Actualizar estado de reserva
+app.patch('/api/reservations/:id', async (req, res) => {
+  try {
+    const oldReservation = await Reservation.findById(req.params.id);
+    const updated = await Reservation.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    
+    // Si se cancela la reserva, devolver las porciones al plato
+    if (req.body.status === 'cancelled' && oldReservation.status !== 'cancelled') {
+      await Dish.findByIdAndUpdate(oldReservation.dish, { $inc: { porciones: oldReservation.quantity } });
+    }
+    
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
