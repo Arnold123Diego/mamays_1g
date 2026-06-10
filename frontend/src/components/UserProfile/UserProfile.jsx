@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './UserProfile.scss';
 import { 
   Box, Tabs, Tab, TextField, Button, Typography, Container, Paper, 
@@ -13,13 +13,17 @@ const lifestyleOptions = ["Estudiante", "Trabajador Remoto", "Atleta", "Padre/Ma
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-const UserProfile = ({ userRole, onBack, onClearRole }) => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+const UserProfile = ({ user, userRole, onBack, onClearRole }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [profileData, setProfileData] = useState(user);
   
   const [newItem, setNewItem] = useState({ allergy: '', category: '', dish: '', service: '' });
   const diningPhotosRef = useRef(null);
+
+  // Asegurar que si el prop 'user' cambia (por ejemplo al registrarse), el estado se actualice
+  useEffect(() => {
+    setProfileData(user);
+  }, [user]);
 
   const handleAddItem = (type, value) => {
     if (!value.trim()) return;
@@ -43,8 +47,9 @@ const UserProfile = ({ userRole, onBack, onClearRole }) => {
       const updatedUser = await res.json();
       if (res.ok) {
         localStorage.setItem('user', JSON.stringify(updatedUser));
-        setUser(updatedUser);
-        alert('✅ Perfil actualizado');
+        // Aquí actualizamos el estado local del formulario
+        setProfileData(updatedUser);
+        alert('✅ Perfil actualizado. Los cambios se verán reflejados al navegar.');
       }
     } catch (err) { alert('❌ Error al guardar'); }
   };

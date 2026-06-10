@@ -73,7 +73,7 @@ function App() {
       )}
 
       {view === 'profile' && user && (
-        <UserProfile userRole={user.rol} onBack={() => setView('home')} onClearRole={handleClearSession} />
+        <UserProfile user={user} userRole={user.rol} onBack={() => setView('home')} onClearRole={handleClearSession} />
       )}
 
       {view === 'publish-dish' && user && (
