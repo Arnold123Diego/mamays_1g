@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header/Header";
 import "./app.scss";
 import Footer from "./components/Footer/Footer";
@@ -9,6 +9,7 @@ import UserProfile from "./components/UserProfile/UserProfile";
 import PublishDish from "./components/PublishDish/PublishDish";
 import MyDiners from "./components/MyDiners/MyDiners";
 import MyMamays from "./components/MyMamays/MyMamays";
+import MyKitchen from "./components/MyKitchen/MyKitchen";
 import AuthForm from "./components/AuthForm/AuthForm";
 import DishDetail from "./components/DishDetail/DishDetail";
 
@@ -16,6 +17,12 @@ function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [view, setView] = useState('home');
   const [selectedDish, setSelectedDish] = useState(null);
+  const [dishToEdit, setDishToEdit] = useState(null);
+
+  // Efecto para scroll al inicio cada vez que cambia la vista
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [view]);
 
   const handleClearSession = () => {
     localStorage.removeItem('user');
@@ -28,12 +35,22 @@ function App() {
     setView('dish-detail');
   };
 
+  const handleEditDish = (dish) => {
+    setDishToEdit(dish);
+    setView('publish-dish');
+  };
+
+  const handleAddNewDish = () => {
+    setDishToEdit(null);
+    setView('publish-dish');
+  };
+
   return (
     <div className="App">
       <Header 
         onProfileClick={() => setView('profile')} 
         onHomeClick={() => setView('home')} 
-        onPublishClick={() => setView('publish-dish')}
+        onPublishClick={() => setView(user?.rol === 'cook' ? 'my-kitchen' : 'publish-dish')}
         onDinersClick={() => setView('diners')}
         onLogout={handleClearSession}
         onLoginClick={() => setView('login')}
@@ -60,7 +77,11 @@ function App() {
       )}
 
       {view === 'publish-dish' && user && (
-        <PublishDish onBack={() => setView('home')} />
+        <PublishDish onBack={() => setView('my-kitchen')} dishToEdit={dishToEdit} />
+      )}
+
+      {view === 'my-kitchen' && user && (
+        <MyKitchen onEditDish={handleEditDish} onAddNew={handleAddNewDish} onBack={() => setView('home')} />
       )}
 
       {view === 'diners' && user && (

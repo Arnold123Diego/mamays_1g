@@ -87,6 +87,16 @@ app.put('/api/user/update', async (req, res) => {
     const { email, ...updateData } = req.body;
     const user = await User.findOneAndUpdate({ email }, updateData, { new: true });
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    // Si el usuario es cocinero y cambió su nombre, actualizar sus platos
+    if (user.rol === 'cook' && updateData.nombre) {
+      const nuevoNombre = `${user.nombre}`;
+      await Dish.updateMany(
+        { cocineroId: user._id },
+        { cocinero: nuevoNombre }
+      );
+    }
+
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -122,6 +132,40 @@ app.post('/api/dishes', async (req, res) => {
     res.status(201).json(savedDish);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// Ruta para actualizar un plato
+app.put('/api/dishes/:id', async (req, res) => {
+  try {
+    const updatedDish = await Dish.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedDish) return res.status(404).json({ message: 'Plato no encontrado' });
+    res.json(updatedDish);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Ruta para eliminar un plato
+app.delete('/api/dishes/:id', async (req, res) => {
+  try {
+    const dish = await Dish.findByIdAndDelete(req.params.id);
+    if (!dish) return res.status(404).json({ message: 'Plato no encontrado' });
+    // También podríamos eliminar las reservas asociadas a este plato si fuera necesario
+    await Reservation.deleteMany({ dish: req.params.id });
+    res.json({ message: 'Plato eliminado correctamente' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Ruta para obtener platos de un cocinero específico
+app.get('/api/dishes/cook/:cookId', async (req, res) => {
+  try {
+    const dishes = await Dish.find({ cocineroId: req.params.cookId });
+    res.json(dishes);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

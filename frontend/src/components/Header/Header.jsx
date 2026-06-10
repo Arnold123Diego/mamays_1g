@@ -40,7 +40,7 @@ const Header = ({ onProfileClick, onHomeClick, onPublishClick, onDinersClick, on
               </span>
               {userRole === 'cook' && (
                 <span style={{ cursor: 'pointer' }} onClick={onPublishClick}>
-                  + Publicar Plato
+                  Mi Cocina
                 </span>
               )}
               <span style={{ cursor: 'pointer' }} onClick={onProfileClick}>Mi Perfil</span>
@@ -79,7 +79,7 @@ const Header = ({ onProfileClick, onHomeClick, onPublishClick, onDinersClick, on
                   {userRole === 'cook' ? 'Mis Comensales' : 'Mis Mamays'}
                 </span>
                 {userRole === 'cook' && (
-                  <span onClick={() => { onPublishClick(); setOpen(false); }}>Publicar Plato</span>
+                  <span onClick={() => { onPublishClick(); setOpen(false); }}>Mi Cocina</span>
                 )}
                 <span onClick={() => { onProfileClick(); setOpen(false); }}>Mi Perfil</span>
                 <span onClick={() => { onLogout(); setOpen(false); }}>Cerrar Sesión</span>

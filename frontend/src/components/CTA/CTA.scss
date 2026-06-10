@@ -18,33 +18,154 @@
 
 .cta {
   width: 100%;
-  background-color: #e83a3a;
-  padding: 50px 200px;
+  background-color: #fcfcfc; // Cambiado a un fondo claro para que resalte el contenido
+  padding: 80px 10%;
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 50px;
+  overflow: hidden;
+
+  @include mobile {
+    padding: 40px 20px;
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+
+  @include tablet {
+    padding: 50px 5%;
+    gap: 20px;
+  }
+
+  .left {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    
+    @include mobile {
+      display: none; // Ocultamos la imagen grande del celular en móviles para ahorrar espacio y evitar desbordes
+    }
+
+    img {
+      max-width: 400px;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+
+      @include tablet {
+        max-width: 300px;
+      }
+    }
+  }
 
   .right {
+    flex: 1;
+    max-width: 500px;
+
     h1 {
-      color: #ffffff;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #1c1c1c;
+
+      @include mobile {
+        font-size: 1.8rem;
+      }
     }
+
     p {
-      color: #ffffff;
+      font-size: 1rem;
+      color: #4f4f4f;
+      margin-bottom: 25px;
     }
-    .radio .radioBtn label {
-      color: #ffffff;
-    }
-    .input {
-      button {
-        background-color: #ffffff;
-        color: #e83a3a;
-        font-weight: bold;
-        &:hover {
-          background-color: #f0f0f0;
+
+    .radio {
+      display: flex;
+      gap: 25px;
+      margin-bottom: 20px;
+
+      @include mobile {
+        justify-content: center;
+      }
+
+      .radioBtn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+
+        input {
+          accent-color: #e83a3a;
+          width: 18px;
+          height: 18px;
+        }
+
+        label {
+          font-size: 0.95rem;
+          color: #1c1c1c;
         }
       }
     }
+
+    .input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+
+      @include mobile {
+        flex-direction: column;
+      }
+
+      input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #cfcfcf;
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+
+        &:focus {
+          border-color: #e83a3a;
+        }
+      }
+
+      button {
+        padding: 12px 25px;
+        background-color: #e83a3a;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+          background-color: #c52d2d;
+        }
+      }
+    }
+
     span {
-      color: #ffffff;
+      display: block;
+      font-size: 0.9rem;
+      color: #9c9c9c;
+      margin-bottom: 15px;
+    }
+
+    .img {
+      display: flex;
+      gap: 15px;
+
+      @include mobile {
+        justify-content: center;
+      }
+
+      img {
+        height: 40px;
+        width: auto;
+        cursor: pointer;
+      }
     }
   }
 }

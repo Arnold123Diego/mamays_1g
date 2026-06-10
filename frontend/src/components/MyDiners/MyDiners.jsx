@@ -18,6 +18,8 @@ const MyDiners = ({ onBack }) => {
   const [diners, setDiners] = useState([]);
   const [reportOpen, setReportOpen] = useState(false);
   const [reportText, setReportText] = useState('');
+  const [discardDialogOpen, setDiscardDialogOpen] = useState(false);
+  const [reservationToDiscard, setReservationToDiscard] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
 
   const fetchReservations = useCallback(async () => {
@@ -34,6 +36,7 @@ const MyDiners = ({ onBack }) => {
   useEffect(() => {
     fetchReservations();
   }, [fetchReservations]);
+
   const updateReservation = async (id, updateData) => {
     try {
       const res = await fetch(`${API_URL}/api/reservations/${id}`, {
@@ -64,11 +67,20 @@ const MyDiners = ({ onBack }) => {
     updateReservation(id, { paymentStatus: newPaymentStatus });
   };
 
-  const handleDiscard = (id) => {
-    if (window.confirm('¿Estás seguro de descartar esta reserva? Las porciones se devolverán automáticamente al stock del plato.')) {
-      updateReservation(id, { status: 'cancelled' });
+  const handleOpenDiscardDialog = (id) => {
+    setReservationToDiscard(id);
+    setDiscardDialogOpen(true);
+  };
+
+  const handleConfirmDiscard = () => {
+    if (reservationToDiscard) {
+      updateReservation(reservationToDiscard, { status: 'cancelled' });
+      setDiscardDialogOpen(false);
+      setReservationToDiscard(null);
     }
   };
+
+  const activeDiners = diners.filter(d => d.status !== 'cancelled');
 
   return (
     <Container maxWidth="lg" className="my-diners-container">
@@ -97,11 +109,11 @@ const MyDiners = ({ onBack }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {diners.length === 0 ? (
-                <TableRow><TableCell colSpan={8} align="center">No hay reservas aún.</TableCell></TableRow>
+              {activeDiners.length === 0 ? (
+                <TableRow><TableCell colSpan={8} align="center">No hay reservas activas aún.</TableCell></TableRow>
               ) : (
-                diners.map((diner) => (
-                  <TableRow key={diner._id} hover sx={{ opacity: diner.status === 'cancelled' ? 0.6 : 1, bgcolor: diner.status === 'cancelled' ? '#fff5f5' : 'transparent' }}>
+                activeDiners.map((diner) => (
+                  <TableRow key={diner._id} hover>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <Avatar src={diner.user?.avatar} alt={diner.user?.nombre}>{diner.user?.nombre?.[0]}</Avatar>
@@ -122,7 +134,6 @@ const MyDiners = ({ onBack }) => {
                               label="Verificar Pago" 
                               color="info" 
                               size="small" 
-                              disabled={diner.status === 'cancelled'}
                               onClick={() => togglePaid(diner._id, diner.paymentStatus, !!diner.transactionId)}
                               sx={{ cursor: 'pointer', fontWeight: 'bold' }}
                             />
@@ -138,11 +149,10 @@ const MyDiners = ({ onBack }) => {
                               color={diner.paymentStatus === 'paid' ? 'success' : 'warning'} 
                               size="small" 
                               variant="outlined" 
-                              disabled={diner.status === 'cancelled'}
                               onClick={() => togglePaid(diner._id, diner.paymentStatus, !!diner.transactionId)}
                               sx={{ cursor: 'pointer' }}
                             />
-                            {diner.paymentStatus === 'paid' && diner.status !== 'cancelled' && (
+                            {diner.paymentStatus === 'paid' && (
                               <Typography variant="caption" color="textSecondary" sx={{ fontSize: '10px' }}>
                                 (Clic para revertir)
                               </Typography>
@@ -154,20 +164,15 @@ const MyDiners = ({ onBack }) => {
                     <TableCell>{diner.reservationTime || '---'}</TableCell>
                     <TableCell align="center">
                       <Checkbox 
-                        disabled={diner.status === 'cancelled'}
                         checked={diner.status === 'completed'} 
                         onChange={() => toggleAttended(diner._id, diner.status)}
                         sx={{ color: '#e83a3a', '&.Mui-checked': { color: '#e83a3a' } }}
                       />
                     </TableCell>
                     <TableCell align="center">
-                      {diner.status !== 'cancelled' ? (
-                        <IconButton onClick={() => handleDiscard(diner._id)} color="error" title="Descartar Reserva">
-                          <DeleteIcon />
-                        </IconButton>
-                      ) : (
-                        <Typography variant="caption" color="error" sx={{ fontWeight: 'bold' }}>DESCARTADA</Typography>
-                      )}
+                      <IconButton onClick={() => handleOpenDiscardDialog(diner._id)} color="error" title="Descartar Reserva">
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))
@@ -201,6 +206,35 @@ const MyDiners = ({ onBack }) => {
           </Button>
         </Box>
       </Paper>
+
+      {/* Diálogo de Confirmación para Descartar */}
+      <Dialog open={discardDialogOpen} onClose={() => setDiscardDialogOpen(false)}>
+        <DialogTitle sx={{ color: '#e83a3a', fontWeight: 'bold' }}>
+          ¿Confirmar descarte de pedido?
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Al descartar este pedido, las porciones correspondientes se devolverán automáticamente al stock disponible de tu plato.
+          </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+            Esta acción no se puede deshacer y el comensal ya no aparecerá en tu lista.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button onClick={() => setDiscardDialogOpen(false)} color="inherit">
+            No, Mantener
+          </Button>
+          <Button 
+            onClick={handleConfirmDiscard} 
+            variant="contained" 
+            color="error"
+            startIcon={<DeleteIcon />}
+            sx={{ borderRadius: '8px' }}
+          >
+            Sí, Descartar
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Dialogo de Reporte */}
       <Dialog open={reportOpen} onClose={() => setReportOpen(false)} fullWidth maxWidth="sm">
