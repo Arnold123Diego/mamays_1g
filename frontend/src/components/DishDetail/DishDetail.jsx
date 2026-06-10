@@ -175,16 +175,18 @@ const DishDetail = ({ dish, onBack }) => {
                 variant="contained" 
                 fullWidth 
                 startIcon={<WhatsAppIcon />}
+                disabled={!seller?.telefono}
                 sx={{ 
                     bgcolor: '#25D366', mb: 2, py: 1.8, borderRadius: '12px',
                     fontSize: '1rem', fontWeight: 'bold', textTransform: 'none',
                     boxShadow: '0 4px 14px rgba(37, 211, 102, 0.4)',
-                    '&:hover': { bgcolor: '#128C7E' } 
+                    '&:hover': { bgcolor: '#128C7E' },
+                    '&.Mui-disabled': { bgcolor: '#ccc' }
                 }}
-                href={`https://wa.me/${seller?.telefono?.replace(/\D/g, '')}?text=Hola%20${dish.cocinero},%20me%20gustaría%20pedir%20tu%20plato:%20${dish.nombre}`}
+                href={seller?.telefono ? `https://api.whatsapp.com/send?phone=51${seller.telefono.replace(/\D/g, '')}&text=${encodeURIComponent(`Hola ${dish.cocinero}, me gustaría pedir tu plato: ${dish.nombre}`)}` : '#'}
                 target="_blank"
               >
-                Hacer pedido por WhatsApp
+                {seller?.telefono ? 'Hacer pedido por WhatsApp' : 'Cargando contacto...'}
               </Button>
               <Button 
                 variant="outlined" 
