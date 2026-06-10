@@ -223,8 +223,16 @@ const DishDetail = ({ dish, onBack }) => {
                     type="number" 
                     label="Cantidad" 
                     fullWidth 
-                    value={quantity} 
-                    onChange={e => setQuantity(Math.max(1, Math.min(dish.porciones, parseInt(e.target.value) || 1)))}
+                    value={quantity === 0 ? '' : quantity} 
+                    onChange={e => {
+                      const val = e.target.value === '' ? 0 : parseInt(e.target.value);
+                      if (!isNaN(val)) {
+                        setQuantity(Math.min(dish.porciones, val));
+                      }
+                    }}
+                    onBlur={() => {
+                      if (quantity < 1) setQuantity(1);
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
