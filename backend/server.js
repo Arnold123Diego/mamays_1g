@@ -14,8 +14,18 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mamaysdb';
 
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Conectado a MongoDB (Mamays Puno DB)'))
-  .catch(err => console.error('❌ Error de conexión:', err));
+  .then(() => console.log('✅ Conectado a MongoDB Atlas (Virginia - Mamays Puno)'))
+  .catch(err => {
+    console.error('❌ Error de conexión a MongoDB:');
+    console.error('Mensaje:', err.message);
+    console.error('Código de error:', err.code);
+    console.error('Nombre del error:', err.name);
+    if (err.message.includes('authentication failed')) {
+      console.error('👉 TIP: Revisa que el usuario y la contraseña en MONGO_URI sean correctos.');
+    } else if (err.message.includes('timeout') || err.message.includes('ETIMEDOUT')) {
+      console.error('👉 TIP: Revisa que en MongoDB Atlas -> Network Access esté permitida la IP 0.0.0.0/0.');
+    }
+  });
 
 // Rutas base (Simuladas por ahora)
 app.get('/', (req, res) => {
