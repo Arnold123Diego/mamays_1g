@@ -223,7 +223,7 @@ app.post('/api/reservations', async (req, res) => {
 app.get('/api/reservations/cook/:cookId', async (req, res) => {
   try {
     const reservations = await Reservation.find({ cook: req.params.cookId })
-      .populate('user', 'nombre email avatar')
+      .populate('user', 'nombre apellido email avatar telefono dietaryPrefs estiloVida alergias categoriasFavoritas platosPreferidos')
       .populate('dish', 'nombre precio')
       .sort({ createdAt: -1 });
     res.json(reservations);

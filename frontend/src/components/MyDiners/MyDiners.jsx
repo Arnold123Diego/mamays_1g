@@ -11,6 +11,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -20,6 +21,8 @@ const MyDiners = ({ onBack }) => {
   const [reportText, setReportText] = useState('');
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false);
   const [reservationToDiscard, setReservationToDiscard] = useState(null);
+  const [selectedDiner, setSelectedDiner] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
 
   const fetchReservations = useCallback(async () => {
@@ -70,6 +73,11 @@ const MyDiners = ({ onBack }) => {
   const handleOpenDiscardDialog = (id) => {
     setReservationToDiscard(id);
     setDiscardDialogOpen(true);
+  };
+
+  const handleViewProfile = (dinerUser) => {
+    setSelectedDiner(dinerUser);
+    setProfileOpen(true);
   };
 
   const handleConfirmDiscard = () => {
@@ -170,9 +178,14 @@ const MyDiners = ({ onBack }) => {
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <IconButton onClick={() => handleOpenDiscardDialog(diner._id)} color="error" title="Descartar Reserva">
-                        <DeleteIcon />
-                      </IconButton>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+                        <IconButton onClick={() => handleViewProfile(diner.user)} color="primary" title="Ver Perfil del Comensal">
+                          <VisibilityIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handleOpenDiscardDialog(diner._id)} color="error" title="Descartar Reserva">
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))
@@ -232,6 +245,53 @@ const MyDiners = ({ onBack }) => {
             sx={{ borderRadius: '8px' }}
           >
             Sí, Descartar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Modal de Detalle del Comensal */}
+      <Dialog open={profileOpen} onClose={() => setProfileOpen(false)} fullWidth maxWidth="xs">
+        <DialogTitle sx={{ textAlign: 'center', pb: 0 }}>
+          <Avatar 
+            src={selectedDiner?.avatar} 
+            sx={{ width: 80, height: 80, mx: 'auto', mb: 2, border: '3px solid #e83a3a' }}
+          >
+            {selectedDiner?.nombre?.[0]}
+          </Avatar>
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+            {selectedDiner?.nombre} {selectedDiner?.apellido}
+          </Typography>
+          <Typography variant="body1" sx={{ mt: 1, color: '#e83a3a', fontWeight: 'bold' }}>
+            📞 {selectedDiner?.telefono || 'Sin teléfono'}
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ mt: 2 }}>
+          <Divider sx={{ mb: 2 }} />
+          
+          <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold' }}>🥗 Dieta y Estilo:</Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+            <Chip label={selectedDiner?.dietaryPrefs || 'No especificado'} size="small" variant="outlined" />
+            <Chip label={selectedDiner?.estiloVida || 'No especificado'} size="small" variant="outlined" />
+          </Box>
+
+          <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: '#d32f2f' }}>⚠️ Alergias:</Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+            {selectedDiner?.alergias?.length > 0 ? (
+              selectedDiner.alergias.map((a, i) => <Chip key={i} label={a} size="small" color="error" />)
+            ) : (
+              <Typography variant="caption">Ninguna reportada</Typography>
+            )}
+          </Box>
+
+          <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold' }}>⭐ Favoritos:</Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+            {selectedDiner?.platosPreferidos?.map((p, i) => <Chip key={i} label={p} size="small" color="primary" variant="outlined" />)}
+            {selectedDiner?.categoriasFavoritas?.map((c, i) => <Chip key={i} label={c} size="small" color="secondary" variant="outlined" />)}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button fullWidth onClick={() => setProfileOpen(false)} variant="contained" sx={{ bgcolor: '#e83a3a' }}>
+            Cerrar
           </Button>
         </DialogActions>
       </Dialog>

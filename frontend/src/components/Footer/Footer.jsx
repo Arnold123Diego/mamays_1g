@@ -14,23 +14,10 @@ const Footer = () => {
       <div className="top">
         <div className="top1">
           <h2>Mamays</h2>
-          <div className="lang">
-            <select>
-              <option value="India">India</option>
-              <option value="Australia">Australia</option>
-              <option value="London">London</option>
-              <option value="America">America</option>
-              <option value="France">France</option>
-              <option value="Brazil">Brazil</option>
-              <option value="England">England</option>
-              <option value="South Africa">South Africa</option>
-              <option value="Rusia">Rusia</option>
-            </select>
-            <select>
-              <option value="English">English</option>
-              <option value="Hindi">Hindi</option>
-              <option value="Polish">Polish</option>
-            </select>
+          <div className="tagline">
+            <p style={{ color: '#4f4f4f', fontSize: '14px' }}>
+              Conectando el sabor del hogar con tu comunidad.
+            </p>
           </div>
         </div>
         <div className="bottom1">
@@ -68,11 +55,13 @@ const Footer = () => {
           <div className="bottomContent">
             <h4>SOCIAL LINKS</h4>
             <div className="links">
+              <a href="https://www.facebook.com/people/Mamays/61565651845073/" target="_blank" rel="noreferrer" style={{ color: 'inherit' }}>
+                <FacebookIcon />
+              </a>
               <LinkedInIcon />
               <TwitterIcon />
               <InstagramIcon />
               <YouTubeIcon />
-              <FacebookIcon />
             </div>
             <img src={App} alt="app" />
             <img src={Phone} alt="app" />
